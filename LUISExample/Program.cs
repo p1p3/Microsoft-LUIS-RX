@@ -6,6 +6,7 @@ using Microsoft.Cognitive.LUIS;
 using RestSharp;
 using RestSharp.Extensions.MonoHttp;
 using System.Reactive.Linq;
+using Luis.Reactive;
 
 namespace LUISExample
 {
@@ -15,6 +16,10 @@ namespace LUISExample
         private const string SubscriptionKey = "ef1581e766f943f297ad120d03e18e61";
         private const bool Preview = false;
 
+        //private const string AppId = "9263b1c9-6908-4043-9b30-3f82da6c2331";
+        //private const string SubscriptionKey = "dd3d1e404da5414da7c215af5bcd1ff6";
+        //private const bool Preview = false;
+
 
         private static string _endPointUrl =
                 "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/{appId}?subscription-key={subscriptionKey}&verbose=true&q="
@@ -23,21 +28,37 @@ namespace LUISExample
         static void Main(string[] args)
         {
 
+            HandlersContainer.Config();
+
             Console.WriteLine("Let me know");
             var userInput = ConsoleInput();
-            userInput.FlatMap(ConsultLuis).Subscribe(result =>
-            {
-                Console.WriteLine("Using RestSharp: ");
-                Console.WriteLine(result.Content);
-            });
-            userInput.FlatMap(RequestLuis).Subscribe(result =>
-            {
 
-                Console.WriteLine("Using LUIS library: ");
-                Console.WriteLine(result.TopScoringIntent.Name);
+            //userInput.FlatMap(ConsultLuis).Subscribe(result =>
+            //{
+            //    Console.WriteLine("Using RestSharp: ");
+            //    Console.WriteLine(result.Content);
+            //});
+            //userInput.FlatMap(RequestLuis).Subscribe(result =>
+            //{
+
+            //    Console.WriteLine("Using LUIS library: ");
+            //    Console.WriteLine(result.TopScoringIntent.Name);
+            //});
+
+            //userInput.FlatMap(RequestLuisReactive).Subscribe(result =>
+            //{
+            //    BookFlightHandlers.SomeHandler(result);
+            //    Console.WriteLine("Using Reactive LUIS library: ");
+            //    Console.WriteLine(result);
+            //});
+
+            userInput.Subscribe(input =>
+            {
+                ActLuisReactive(input).Subscribe(Console.WriteLine);
             });
 
-            while (true);
+
+            while (true) ;
         }
 
 
@@ -55,7 +76,7 @@ namespace LUISExample
         private static IObservable<IRestResponse> ConsultLuis(string question)
         {
             var queryString = HttpUtility.ParseQueryString(question);
-            var url = _endPointUrl.Replace("{appId}",AppId).Replace("{subscriptionKey}",SubscriptionKey) + queryString;
+            var url = _endPointUrl.Replace("{appId}", AppId).Replace("{subscriptionKey}", SubscriptionKey) + queryString;
             var client = new RestClient(url);
 
             var request = new RestRequest(Method.GET);
@@ -66,6 +87,18 @@ namespace LUISExample
         {
             LuisClient client = new LuisClient(AppId, SubscriptionKey, Preview);
             return client.Predict(question).ToObservable();
+        }
+
+        static IObservable<Luis.Reactive.Structures.LuisResult> RequestLuisReactive(string question)
+        {
+            var client = new LuisReactiveClient(AppId, SubscriptionKey, Preview);
+            return client.Predict(question);
+        }
+
+        static IObservable<string> ActLuisReactive(string question)
+        {
+            var client = new LuisReactiveClient(AppId, SubscriptionKey, Preview);
+            return client.PredictAndAct(question);
         }
     }
 }
