@@ -7,12 +7,19 @@ using Newtonsoft.Json.Linq;
 
 namespace Luis.Reactive.Structures
 {
-    public class CompositeEntity
+    public interface ICompositeEntity
+    {
+        string Name { get; set; }
+        string Value { get; set; }
+    }
+
+
+    public class CompositeEntity : ICompositeEntity
     {
         /// <summary>
         /// The name of the type of parent entity.
         /// </summary>
-        public string ParentType { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// The composite entity value.
@@ -30,7 +37,7 @@ namespace Luis.Reactive.Structures
         /// <param name="compositeEntity">Json object containing the composite entity</param>
         public void Load(JObject compositeEntity)
         {
-            ParentType = (string)compositeEntity["parentType"];
+            Name = (string)compositeEntity["parentType"];
             Value = (string)compositeEntity["value"];
             try
             {

@@ -14,7 +14,7 @@ using RestSharp.Extensions.MonoHttp;
 
 namespace Luis.Reactive
 {
-    public class LuisReactiveClient : IDisposable
+    public class LuisClient : IDisposable
     {
 
         private const string DEFAULT_BASE_URI = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/{appId}?subscription-key={subscriptionKey}&verbose=true&q=";
@@ -70,7 +70,7 @@ namespace Luis.Reactive
         /// <param name="appKey">The application subscription key of the LUIS application</param>
         /// <param name="preview">A flag indicating whether to use preview features or not (Dialogue)</param>
         /// top scoring in case of using the dialogue</param>
-        public LuisReactiveClient(string appId, string appKey, bool preview = false) : this(appId, appKey, DEFAULT_BASE_URI, preview) { }
+        public LuisClient(string appId, string appKey, bool preview = false) : this(appId, appKey, DEFAULT_BASE_URI, preview) { }
 
         /// <summary>
         /// Construct a new Luis client with a shared <see cref="HttpClient"/> instance.
@@ -80,7 +80,7 @@ namespace Luis.Reactive
         /// <param name="baseApiUrl">Root URI for the service endpoint.</param>
         /// <param name="preview">A flag indicating whether to use preview features or not (Dialogue)</param>
         /// top scoring in case of using the dialogue</param>
-        public LuisReactiveClient(string appId, string appKey, string baseApiUrl, bool preview = false)
+        public LuisClient(string appId, string appKey, string baseApiUrl, bool preview = false)
         {
             if (String.IsNullOrWhiteSpace(appId)) throw new ArgumentException(nameof(appId));
             if (String.IsNullOrWhiteSpace(appKey)) throw new ArgumentException(nameof(appKey));

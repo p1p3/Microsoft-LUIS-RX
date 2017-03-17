@@ -7,14 +7,16 @@ using System.Threading.Tasks;
 namespace Luis.Reactive
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class EntityAttribute : Attribute
+    public class CompositeEntityAttribute : Attribute
     {
-        public EntityAttribute(string name)
+        public CompositeEntityAttribute(string name)
         {
             Name = name;
         }
 
+
         public string Name { get; private set; }
+
 
     }
 }

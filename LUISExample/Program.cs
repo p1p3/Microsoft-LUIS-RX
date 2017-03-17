@@ -42,13 +42,13 @@ namespace LUISExample
 
         static IObservable<Luis.Reactive.Structures.LuisResult> RequestLuisReactive(string question)
         {
-            var client = new LuisReactiveClient(AppId, SubscriptionKey);
+            var client = new LuisClient(AppId, SubscriptionKey);
             return client.Predict(question);
         }
 
         private static IObservable<string> ActLuisReactive(string question)
         {
-            var client = new LuisReactiveClient(AppId, SubscriptionKey);
+            var client = new LuisClient(AppId, SubscriptionKey);
             return client.PredictAndAct(question)
                          .Catch<string, NotHandlerFoundException>(noHandler => Observable.Return("Can you be more specific?"))
                          .Catch<string, NotIntentFoundException>(noHandler => Observable.Return("I don't understand what you are saying"))

@@ -14,6 +14,8 @@ namespace LUISExample
             var airLine = result.GetEntity<Airline>().First();
             var origin = result.GetEntity<Destination>().First();
 
+            var composite = result.GetCompositeEntity<TicketsOrders>();
+
             var response = $"You are going to take a {airLine.Value} plane from {origin.Value}";
             return response;
         }
@@ -23,7 +25,7 @@ namespace LUISExample
         {
             var airLine = result.GetEntity<Airline>().First();
 
-            var response = $"The airline you have selected is : {airLine}"  ;
+            var response = $"The airline you have selected is : {airLine}";
             return response;
         }
 
@@ -56,5 +58,32 @@ namespace LUISExample
 
     }
 
+    
+    [CompositeEntity("TicketsOrders")]
+    public class TicketsOrders : CompositeEntity
+    {
+        public Category Category { get; set; }
+        public TravelClass Class { get; set; }
+        public Number Quantity { get; set; }
 
+    }
+
+    [Entity("Category")]
+    public class Category : Entity
+    {
+
+    }
+
+    [Entity("TravelClass")]
+    public class TravelClass : Entity
+    {
+
+    }
+
+
+    [Entity("number")]
+    public class Number : Entity
+    {
+
+    }
 }
