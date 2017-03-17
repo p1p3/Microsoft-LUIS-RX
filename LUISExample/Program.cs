@@ -46,7 +46,7 @@ namespace LUISExample
             return client.Predict(question);
         }
 
-        static IObservable<string> ActLuisReactive(string question)
+        private static IObservable<string> ActLuisReactive(string question)
         {
             var client = new LuisReactiveClient(AppId, SubscriptionKey);
             return client.PredictAndAct(question)
