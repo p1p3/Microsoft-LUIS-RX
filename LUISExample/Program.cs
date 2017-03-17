@@ -15,12 +15,6 @@ namespace LUISExample
     {
         private const string AppId = "f2aa7663-195b-441a-93c5-709f474d84e4";
         private const string SubscriptionKey = "ef1581e766f943f297ad120d03e18e61";
-        private const bool Preview = false;
-
-        //private const string AppId = "9263b1c9-6908-4043-9b30-3f82da6c2331";
-        //private const string SubscriptionKey = "dd3d1e404da5414da7c215af5bcd1ff6";
-        //private const bool Preview = false;
-
 
         private static string _endPointUrl =
                 "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/{appId}?subscription-key={subscriptionKey}&verbose=true&q="
@@ -38,10 +32,9 @@ namespace LUISExample
                 .FlatMap(ActLuisReactive)
                 .Subscribe(Console.WriteLine);
 
-            while (true) ;
+            while (true);
         }
-
-
+        
         private static IObservable<string> ConsoleInput()
         {
             return
@@ -53,31 +46,15 @@ namespace LUISExample
                     .SubscribeOn(Scheduler.Default);
         }
 
-        private static IObservable<IRestResponse> ConsultLuis(string question)
-        {
-            var queryString = HttpUtility.ParseQueryString(question);
-            var url = _endPointUrl.Replace("{appId}", AppId).Replace("{subscriptionKey}", SubscriptionKey) + queryString;
-            var client = new RestClient(url);
-
-            var request = new RestRequest(Method.GET);
-            return client.ExecuteTaskAsync(request).ToObservable();
-        }
-
-        static IObservable<LuisResult> RequestLuis(string question)
-        {
-            LuisClient client = new LuisClient(AppId, SubscriptionKey, Preview);
-            return client.Predict(question).ToObservable();
-        }
-
         static IObservable<Luis.Reactive.Structures.LuisResult> RequestLuisReactive(string question)
         {
-            var client = new LuisReactiveClient(AppId, SubscriptionKey, Preview);
+            var client = new LuisReactiveClient(AppId, SubscriptionKey);
             return client.Predict(question);
         }
 
         static IObservable<string> ActLuisReactive(string question)
         {
-            var client = new LuisReactiveClient(AppId, SubscriptionKey, Preview);
+            var client = new LuisReactiveClient(AppId, SubscriptionKey);
             return client.PredictAndAct(question)
                          .Catch<string, NotHandlerFoundException>(noHandler => Observable.Return("Can you be more specific?"))
                          .Catch<string, NotIntentFoundException>(noHandler => Observable.Return("I don't understand what you are saying"))
