@@ -18,15 +18,13 @@ namespace LUISExample
 
         static void Main(string[] args)
         {
-
             HandlersContainer.Config();
 
             Console.WriteLine("Let me know");
             var userInput = ConsoleInput();
 
-            userInput
-                .FlatMap(ActLuisReactive)
-                .Subscribe(Console.WriteLine);
+            userInput.FlatMap(ActLuisReactive)
+                     .Subscribe(Console.WriteLine);
 
             while (true);
         }
