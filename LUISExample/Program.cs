@@ -7,6 +7,7 @@ using RestSharp;
 using RestSharp.Extensions.MonoHttp;
 using System.Reactive.Linq;
 using Luis.Reactive;
+using Luis.Reactive.Exceptions;
 
 namespace LUISExample
 {
@@ -33,30 +34,9 @@ namespace LUISExample
             Console.WriteLine("Let me know");
             var userInput = ConsoleInput();
 
-            //userInput.FlatMap(ConsultLuis).Subscribe(result =>
-            //{
-            //    Console.WriteLine("Using RestSharp: ");
-            //    Console.WriteLine(result.Content);
-            //});
-            //userInput.FlatMap(RequestLuis).Subscribe(result =>
-            //{
-
-            //    Console.WriteLine("Using LUIS library: ");
-            //    Console.WriteLine(result.TopScoringIntent.Name);
-            //});
-
-            //userInput.FlatMap(RequestLuisReactive).Subscribe(result =>
-            //{
-            //    BookFlightHandlers.SomeHandler(result);
-            //    Console.WriteLine("Using Reactive LUIS library: ");
-            //    Console.WriteLine(result);
-            //});
-
-            userInput.Subscribe(input =>
-            {
-                ActLuisReactive(input).Subscribe(Console.WriteLine);
-            });
-
+            userInput
+                .FlatMap(ActLuisReactive)
+                .Subscribe(Console.WriteLine);
 
             while (true) ;
         }
@@ -98,7 +78,10 @@ namespace LUISExample
         static IObservable<string> ActLuisReactive(string question)
         {
             var client = new LuisReactiveClient(AppId, SubscriptionKey, Preview);
-            return client.PredictAndAct(question);
+            return client.PredictAndAct(question)
+                         .Catch<string, NoHandlerException>(noHandler => Observable.Return("Can you be more specific?"))
+                         .Catch<string, NotIntentFound>(noHandler => Observable.Return("I don't understand what you are saying"))
+                         .Catch<string, Exception>(noHandler => Observable.Return("Ups something Went wrong!"));
         }
     }
 }

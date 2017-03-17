@@ -14,7 +14,7 @@ namespace LUISExample
             var airLine = result.GetEntity<Airline>().First();
             var origin = result.GetEntity<Destination>().First();
 
-            var response = airLine.Value + origin.Value;
+            var response = $"You are going to take a {airLine.Value} plane from {origin.Value}";
             return response;
         }
 
@@ -23,9 +23,10 @@ namespace LUISExample
         {
             var airLine = result.GetEntity<Airline>().First();
 
-            var response = airLine.Value;
+            var response = $"The airline you have selected is : {airLine}"  ;
             return response;
         }
+
 
     }
 

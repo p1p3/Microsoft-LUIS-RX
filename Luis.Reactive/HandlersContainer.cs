@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Luis.Reactive.Exceptions;
 using Luis.Reactive.Structures;
 
 namespace Luis.Reactive
@@ -82,10 +83,14 @@ namespace Luis.Reactive
 
         public static Handler ResolveHandler(LuisResult result)
         {
+            var intentName = result.TopScoringIntent.Name;
+
+            if(intentName.ToLower().Equals("none")) throw new NotIntentFound(result.OriginalQuery);
 
             IList<Handler> possibleIntentHandlers;
-            handlersContainer.TryGetValue(result.TopScoringIntent.Name, out possibleIntentHandlers);
+            handlersContainer.TryGetValue(intentName, out possibleIntentHandlers);
 
+            IEnumerable<string> missingEntities = new List<string>();
             var entitiesInResult = result.Entities.Select(entity => entity.Key).ToArray();
             foreach (var possibleIntentHandler in possibleIntentHandlers)
             {
@@ -93,7 +98,7 @@ namespace Luis.Reactive
                 var entitiesRequieredInHandler = attribute.RequieredEntities.Select(entity => entity.GetCustomAttribute<EntityAttribute>().Name).ToArray();
 
 
-                var missingEntities = from requieredEntity in entitiesRequieredInHandler
+                 missingEntities = from requieredEntity in entitiesRequieredInHandler
                     where !(from entityInResult in entitiesInResult
                         select entityInResult).Contains(requieredEntity)
                     select requieredEntity;
@@ -102,7 +107,7 @@ namespace Luis.Reactive
 
             }
 
-            throw new Exception();
+            throw new NoHandlerException($"We could not find any handler for the intent {intentName}", missingEntities.ToArray());
         }
 
     }
