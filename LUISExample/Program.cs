@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Observable.Aliases;
-using System.Reactive.Threading.Tasks;
-using Microsoft.Cognitive.LUIS;
-using RestSharp;
-using RestSharp.Extensions.MonoHttp;
 using System.Reactive.Linq;
 using Luis.Reactive;
 using Luis.Reactive.Exceptions;
