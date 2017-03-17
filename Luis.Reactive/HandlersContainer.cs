@@ -85,7 +85,7 @@ namespace Luis.Reactive
         {
             var intentName = result.TopScoringIntent.Name;
 
-            if(intentName.ToLower().Equals("none")) throw new NotIntentFound(result.OriginalQuery);
+            if(intentName.ToLower().Equals("none")) throw new NotIntentFoundException(result.OriginalQuery);
 
             IList<Handler> possibleIntentHandlers;
             handlersContainer.TryGetValue(intentName, out possibleIntentHandlers);
@@ -107,7 +107,7 @@ namespace Luis.Reactive
 
             }
 
-            throw new NoHandlerException($"We could not find any handler for the intent {intentName}", missingEntities.ToArray());
+            throw new NotHandlerFoundException($"We could not find any handler for the intent {intentName}", missingEntities.ToArray());
         }
 
     }

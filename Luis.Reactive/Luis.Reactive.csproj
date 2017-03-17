@@ -70,8 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityAttribute.cs" />
-    <Compile Include="Exceptions\NoHandlerException.cs" />
-    <Compile Include="Exceptions\NotIntentFound.cs" />
+    <Compile Include="Exceptions\NotHandlerFoundException.cs" />
+    <Compile Include="Exceptions\NotIntentFoundException.cs" />
     <Compile Include="HandlersContainer.cs" />
     <Compile Include="IntentAttribute.cs" />
     <Compile Include="IntentHandlerAttribute.cs" />

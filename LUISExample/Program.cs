@@ -79,8 +79,8 @@ namespace LUISExample
         {
             var client = new LuisReactiveClient(AppId, SubscriptionKey, Preview);
             return client.PredictAndAct(question)
-                         .Catch<string, NoHandlerException>(noHandler => Observable.Return("Can you be more specific?"))
-                         .Catch<string, NotIntentFound>(noHandler => Observable.Return("I don't understand what you are saying"))
+                         .Catch<string, NotHandlerFoundException>(noHandler => Observable.Return("Can you be more specific?"))
+                         .Catch<string, NotIntentFoundException>(noHandler => Observable.Return("I don't understand what you are saying"))
                          .Catch<string, Exception>(noHandler => Observable.Return("Ups something Went wrong!"));
         }
     }

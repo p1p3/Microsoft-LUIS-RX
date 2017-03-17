@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Luis.Reactive.Exceptions
 {
-   public class NotIntentFound :Exception
+   public class NotIntentFoundException :Exception
     {
-        public NotIntentFound(string inputText):base($"Not intent found for {inputText}") { }
+        public NotIntentFoundException(string inputText):base($"Not intent found for {inputText}") { }
     }
 }

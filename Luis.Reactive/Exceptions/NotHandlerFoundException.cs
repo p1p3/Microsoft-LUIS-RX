@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Luis.Reactive.Exceptions
 {
-    public class NoHandlerException:Exception
+    public class NotHandlerFoundException:Exception
     {
-        public NoHandlerException(string error,params string[] requiredEntities) : base(error) { }
+        public NotHandlerFoundException(string error,params string[] requiredEntities) : base(error) { }
     }
 }
