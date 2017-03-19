@@ -8,15 +8,15 @@ namespace LUISExample
     [Intent("BookFlight")]
     public class BookFlightHandlers
     {
-        [IntentHandler(0.60, typeof(Airline), typeof(Destination))]
+        [IntentHandler(0.60, typeof(Airline), typeof(Destination), typeof(TicketsOrders))]
         public static string SomeHandler(LuisResult result)
         {
             var airLine = result.GetEntity<Airline>().First();
             var origin = result.GetEntity<Destination>().First();
 
-            var composite = result.GetCompositeEntity<TicketsOrders>();
+            var composite = result.GetCompositeEntity<TicketsOrders>().FirstOrDefault();
 
-            var response = $"You are going to take a {airLine.Value} plane from {origin.Value}";
+            var response = $"You are going to take a {airLine.Value} plane from {origin.Value} in {composite.Class.Value} class";
             return response;
         }
 
@@ -81,7 +81,7 @@ namespace LUISExample
     }
 
 
-    [Entity("number")]
+    [Entity("builtin.number")]
     public class Number : Entity
     {
 

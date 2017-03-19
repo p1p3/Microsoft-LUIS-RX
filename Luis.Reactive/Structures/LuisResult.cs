@@ -51,7 +51,6 @@ namespace Luis.Reactive.Structures
                 var compositeEntityIstance = Activator.CreateInstance<TEntityType>();
                 foreach (var property in properties)
                 {
-                    var propertyName = property.Name;
                     var propertyInfo = compositeEntityIstance.GetType().GetProperty(property.Name);
                     var propertyType = propertyInfo.PropertyType;
                     var attribute = propertyType.GetCustomAttribute<EntityAttribute>();
@@ -61,9 +60,12 @@ namespace Luis.Reactive.Structures
                     //TODO: Multiple Child of the same type
                     var childEntity =
                         entity.CompositeEntityChildren.FirstOrDefault(
-                            child => attribute.Name.Equals(propertyName));
+                            child => attribute.Name.Equals(child.Name));
 
-                    childEntity.CopyEntityChildToEntityTo<TEntityType>(ref compositeEntityIstance);
+                    var childInstance = Activator.CreateInstance(propertyType);
+                    childEntity.CopyEntityChildToEntityTo(ref childInstance);
+                    
+                    property.SetValue(compositeEntityIstance, childInstance);
                 }
                 entitiesToReturn.Add(compositeEntityIstance);
             }

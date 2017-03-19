@@ -15,7 +15,7 @@ namespace Luis.Reactive
 
         public class Handler
         {
-            public Handler( double threshold, IntentHandlerFunc exec)
+            public Handler(double threshold, IntentHandlerFunc exec)
             {
                 Threshold = threshold;
                 Exec = exec;
@@ -25,7 +25,7 @@ namespace Luis.Reactive
             public IntentHandlerFunc Exec { get; }
         };
 
-        private static IDictionary<string, IList<Handler>> handlersContainer= new Dictionary<string, IList<Handler>>();
+        private static IDictionary<string, IList<Handler>> handlersContainer = new Dictionary<string, IList<Handler>>();
 
 
         public static void Config()
@@ -57,7 +57,7 @@ namespace Luis.Reactive
 
             if (!handlersContainer.TryGetValue(intentName, out handlersList))
             {
-                handlersContainer[intentName] = new List<Handler>() {new Handler(threshold,intentHandler) };
+                handlersContainer[intentName] = new List<Handler>() { new Handler(threshold, intentHandler) };
             }
             else
             {
@@ -85,25 +85,32 @@ namespace Luis.Reactive
         {
             var intentName = result.TopScoringIntent.Name;
 
-            if(intentName.ToLower().Equals("none")) throw new NotIntentFoundException(result.OriginalQuery);
+            if (intentName.ToLower().Equals("none")) throw new NotIntentFoundException(result.OriginalQuery);
 
             IList<Handler> possibleIntentHandlers;
             handlersContainer.TryGetValue(intentName, out possibleIntentHandlers);
 
             IEnumerable<string> missingEntities = new List<string>();
+            IEnumerable<string> missingCompositeEntities = new List<string>();
+
             var entitiesInResult = result.Entities.Select(entity => entity.Key).ToArray();
             foreach (var possibleIntentHandler in possibleIntentHandlers)
             {
                 var attribute = possibleIntentHandler.Exec.GetMethodInfo().GetCustomAttribute<IntentHandlerAttribute>();
-                var entitiesRequieredInHandler = attribute.RequieredEntities.Select(entity => entity.GetCustomAttribute<EntityAttribute>().Name).ToArray();
 
 
-                 missingEntities = from requieredEntity in entitiesRequieredInHandler
-                    where !(from entityInResult in entitiesInResult
-                        select entityInResult).Contains(requieredEntity)
-                    select requieredEntity;
+                var entitiesRequieredInHandler = attribute.RequieredEntities
+                    .Select(entity => entity.GetCustomAttribute<EntityAttribute>().Name)
+                    .ToArray();
 
-                if (!missingEntities.Any() && result.TopScoringIntent.Score >= possibleIntentHandler.Threshold ) return possibleIntentHandler;
+
+                missingEntities = from requieredEntity in entitiesRequieredInHandler
+                                  where !(from entityInResult in entitiesInResult
+                                          select entityInResult).Contains(requieredEntity)
+                                  select requieredEntity;
+
+                
+                if (!missingEntities.Any() && result.TopScoringIntent.Score >= possibleIntentHandler.Threshold) return possibleIntentHandler;
 
             }
 

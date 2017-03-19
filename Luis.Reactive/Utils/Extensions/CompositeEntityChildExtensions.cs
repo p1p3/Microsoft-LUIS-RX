@@ -16,7 +16,7 @@ namespace Luis.Reactive.Utils.Extensions
             {
                 var value = propertyChild.GetValue(compositeEntityChild);
                 var instancePropertyInfo = otherInstance.GetType().GetProperty(propertyChild.Name);
-                instancePropertyInfo.SetValue(instancePropertyInfo, value, null);
+                instancePropertyInfo.SetValue(otherInstance, value, null);
             }
 
             return otherInstance;
