@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Luis.Reactive.Utils.Extensions;
 using Newtonsoft.Json.Linq;
 
 namespace Luis.Reactive.Structures
@@ -40,10 +41,7 @@ namespace Luis.Reactive.Structures
             var attributes = compositeEntityType.GetCustomAttribute<CompositeEntityAttribute>();
             CompositeEntities.TryGetValue(attributes.Name, out storedCompositeEntities);
 
-            var properties = from property in compositeEntityType.GetProperties()
-                             where typeof(IEntity).IsAssignableFrom(property.PropertyType)
-                             select property;
-
+            var properties = compositeEntityType.PropertiesOfType<IEntity>();
 
             IList<TEntityType> entitiesToReturn = new List<TEntityType>();
             if (storedCompositeEntities == null) return entitiesToReturn;
@@ -61,27 +59,17 @@ namespace Luis.Reactive.Structures
                     if (attribute == null) continue;
 
                     //TODO: Multiple Child of the same type
-                    var entityChild =
+                    var childEntity =
                         entity.CompositeEntityChildren.FirstOrDefault(
-                            childEntity => attribute.Name.Equals(propertyName));
+                            child => attribute.Name.Equals(propertyName));
 
-                    
-                    // TODO: Dont cast this way
-
-
-                   // propertyInfo.SetValue(entityCasted, entityChild, null);
+                    childEntity.CopyEntityChildToEntityTo<TEntityType>(ref compositeEntityIstance);
                 }
                 entitiesToReturn.Add(compositeEntityIstance);
             }
 
             return entitiesToReturn;
         }
-
-        //private TType castChildEntityToCustomType<TType>(CompositeEntityChild child, TType castType)
-        //{
-        //    return null;
-        //}
- 
 
         public LuisResult(JToken result)
         {

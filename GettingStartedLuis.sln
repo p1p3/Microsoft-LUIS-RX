@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LUISExample", "LUISExample\LUISExample.csproj", "{B8756699-1C95-4DC9-B068-492461B84335}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Luis.Reactive", "Luis.Reactive\Luis.Reactive.csproj", "{19DA8126-4FE0-4824-8ED1-3BC9C408D039}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Luis.Reactive.Test", "Luis.Reactive.Test\Luis.Reactive.Test.csproj", "{2EF66865-5A7F-4C95-9207-FB659759958B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{19DA8126-4FE0-4824-8ED1-3BC9C408D039}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19DA8126-4FE0-4824-8ED1-3BC9C408D039}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19DA8126-4FE0-4824-8ED1-3BC9C408D039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF66865-5A7F-4C95-9207-FB659759958B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF66865-5A7F-4C95-9207-FB659759958B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF66865-5A7F-4C95-9207-FB659759958B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF66865-5A7F-4C95-9207-FB659759958B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

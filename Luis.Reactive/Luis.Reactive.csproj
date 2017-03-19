@@ -84,6 +84,8 @@
     <Compile Include="Structures\Intent.cs" />
     <Compile Include="Structures\LuisResult.cs" />
     <Compile Include="Structures\Utterance.cs" />
+    <Compile Include="Utils\Extensions\CompositeEntityChildExtensions.cs" />
+    <Compile Include="Utils\Extensions\TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
