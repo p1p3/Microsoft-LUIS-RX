@@ -64,7 +64,7 @@ namespace Cris.Reactive
         public CrisReactiveClient(string subscriptionKey, string endpointUrl, string authenticationUri, string language = "en-US")
         {
             this.client = SpeechRecognitionServiceFactory.CreateMicrophoneClient(
-               0,
+               SpeechRecognitionMode.LongDictation, 
                 language,
                 subscriptionKey, subscriptionKey, endpointUrl);
             client.AuthenticationUri = authenticationUri;

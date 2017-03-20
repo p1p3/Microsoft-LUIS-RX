@@ -14,6 +14,8 @@ namespace LUISExample
     {
         private const string AppId = "f2aa7663-195b-441a-93c5-709f474d84e4";
         private const string SubscriptionKey = "ef1581e766f943f297ad120d03e18e61";
+        private static LuisClient luisClient;
+        private static CrisReactiveClient crisClient;
 
         private static string _endPointUrl =
                 "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/{appId}?subscription-key={subscriptionKey}&verbose=true&q="
@@ -23,11 +25,15 @@ namespace LUISExample
         {
             HandlersContainer.Config();
 
-            var crisClient = new CrisReactiveClient("fd63977286fb4fe5bb91b63502dfbad3",
-                 "https://08c41aa65fce4d7e93b55bdbfa28066e.api.cris.ai/ws/cris/speech/recognize",
+            luisClient = new LuisClient(AppId, SubscriptionKey);
+
+
+            crisClient = new CrisReactiveClient("fd63977286fb4fe5bb91b63502dfbad3",
+                 "https://08c41aa65fce4d7e93b55bdbfa28066e.api.cris.ai/ws/cris/speech/recognize/continuous",
                  "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken");
 
             crisClient.MicStatus.Subscribe(recording => Console.WriteLine($"Recording {recording}"));
+            crisClient.ConversationError.Subscribe(error => Console.WriteLine(error));
 
             Console.WriteLine("Let me know");
             var userInput = ConsoleInput();
@@ -43,12 +49,11 @@ namespace LUISExample
                     var fullText = string.Join(" ", textResult);
                     return fullText;
 
-                })
+                }).Buffer(new TimeSpan(0,0,0,10))
                 .FlatMap(text => ActLuisReactive(text.ToString()))
-                .Subscribe(Console.WriteLine);
+                .Subscribe(chars => Console.WriteLine(String.Join("", chars)));
 
 
-            crisClient.ConversationError.Subscribe(error => Console.WriteLine(error));
 
             while (true);
         }
@@ -72,8 +77,8 @@ namespace LUISExample
 
         private static IObservable<string> ActLuisReactive(string question)
         {
-            var client = new LuisClient(AppId, SubscriptionKey);
-            return client.PredictAndAct(question)
+            if (String.IsNullOrWhiteSpace(question)) return Observable.Empty<string>();
+            return luisClient.PredictAndAct(question)
                          .Catch<string, NotHandlerFoundException>(noHandler => Observable.Return("Can you be more specific?"))
                          .Catch<string, NotIntentFoundException>(noHandler => Observable.Return("I don't understand what you are saying"))
                          .Catch<string, Exception>(noHandler => Observable.Return("Ups something Went wrong!"));
