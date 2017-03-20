@@ -2,6 +2,7 @@
 using System.Reactive.Concurrency;
 using System.Reactive.Observable.Aliases;
 using System.Reactive.Linq;
+using Cris.Reactive;
 using Luis.Reactive;
 using Luis.Reactive.Exceptions;
 
@@ -19,6 +20,12 @@ namespace LUISExample
         static void Main(string[] args)
         {
             HandlersContainer.Config();
+
+           // var clas = new Class1("","","");
+
+           //var crisClient = new CrisReactiveClient("fd63977286fb4fe5bb91b63502dfbad3",
+           //     "https://08c41aa65fce4d7e93b55bdbfa28066e.api.cris.ai/cris/speech/query",
+           //     "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken");
 
             Console.WriteLine("Let me know");
             var userInput = ConsoleInput();
