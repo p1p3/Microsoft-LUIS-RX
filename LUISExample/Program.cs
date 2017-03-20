@@ -24,8 +24,10 @@ namespace LUISExample
             HandlersContainer.Config();
 
             var crisClient = new CrisReactiveClient("fd63977286fb4fe5bb91b63502dfbad3",
-                 "https://08c41aa65fce4d7e93b55bdbfa28066e.api.cris.ai/cris/speech/query",
+                 "https://08c41aa65fce4d7e93b55bdbfa28066e.api.cris.ai/ws/cris/speech/recognize",
                  "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken");
+
+            crisClient.MicStatus.Subscribe(recording => Console.WriteLine($"Recording {recording}"));
 
             Console.WriteLine("Let me know");
             var userInput = ConsoleInput();
@@ -43,7 +45,10 @@ namespace LUISExample
 
                 })
                 .FlatMap(text => ActLuisReactive(text.ToString()))
-                .Subscribe(Console.WriteLine); 
+                .Subscribe(Console.WriteLine);
+
+
+            crisClient.ConversationError.Subscribe(error => Console.WriteLine(error));
 
             while (true);
         }
