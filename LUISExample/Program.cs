@@ -23,8 +23,6 @@ namespace LUISExample
         {
             HandlersContainer.Config();
 
-            // var clas = new Class1("","","");
-
             var crisClient = new CrisReactiveClient("fd63977286fb4fe5bb91b63502dfbad3",
                  "https://08c41aa65fce4d7e93b55bdbfa28066e.api.cris.ai/cris/speech/query",
                  "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken");
@@ -36,11 +34,16 @@ namespace LUISExample
                      .Subscribe(Console.WriteLine);
 
 
-            //crisClient.StartMicAndRecognition()
-            //    .FlatMap(result =>
-            //    {
-            //        string.Join(result.Results.Select(crisResult => crisResult.DisplayText), "")
-            //    });
+            crisClient.StartMicAndRecognition()
+                .FlatMap(result =>
+                {
+                    var textResult = result.Results.Select(crisResult => crisResult.DisplayText);
+                    var fullText = string.Join(" ", textResult);
+                    return fullText;
+
+                })
+                .FlatMap(text => ActLuisReactive(text.ToString()))
+                .Subscribe(Console.WriteLine); 
 
             while (true);
         }
