@@ -29,6 +29,16 @@ namespace LUISExample
             return response;
         }
 
+        [IntentHandler(0.70, typeof(Destination))]
+        public static string DestinationHandler(LuisResult result)
+        {
+            var destination = result.GetEntity<Destination>().First();
+
+            var response = $"Half way to : {destination.Value}";
+            return response;
+        }
+
+
 
     }
 
